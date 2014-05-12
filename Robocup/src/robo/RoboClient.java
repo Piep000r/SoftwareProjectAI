@@ -68,7 +68,7 @@ public class RoboClient {
 				e.printStackTrace();
 			}			
 		}
-		System.out.println("Tschö!");
+		System.out.println("Tschï¿½!");
 
 		for(int i=0; i<AnzahlSpieler; i++){
 			Spieler[i].bye();

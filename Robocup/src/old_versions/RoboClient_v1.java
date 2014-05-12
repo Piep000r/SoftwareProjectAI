@@ -19,11 +19,11 @@ public class RoboClient_v1 {
 		
 
 		for(int i=0; i<AnzahlSpieler; i++){
-			Spieler[i]= new Robo("127.0.0.1", 6000, Team1);
+			Spieler[i]= new Robo("192.168.0.7", 6000, Team1);
 			Spieler[i].init(Team1, 15);
 		}
 		for(int i=0;i<AnzahlGegner;i++){
-			Gegner[i]= new Robo("127.0.0.1",6000, Team2);
+			Gegner[i]= new Robo("192.168.0.7",6000, Team2);
 			Gegner[i].init(Team2, 15);
 		}
 
@@ -55,7 +55,7 @@ public class RoboClient_v1 {
 				e.printStackTrace();
 			}			
 		}
-		System.out.println("Tschö!");
+		System.out.println("Tschï¿½!");
 		for(int i=0; i<11; i++){
 			Spieler[i].bye();
 			Gegner[i].bye();

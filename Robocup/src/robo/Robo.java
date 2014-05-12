@@ -6,7 +6,7 @@ import java.lang.Math;
 public class Robo extends UDPServer{
 
 	//Eigene Mannschaft - Information
-	//Durch Ändern der Arrays können kick_off-Positionen und Spielertypen angegeben werden.
+	//Durch ï¿½ndern der Arrays kï¿½nnen kick_off-Positionen und Spielertypen angegeben werden.
 	public String [] playerTypes={"keeper", "defense_l", "defense_r", "striker", "back", "back", "back", "back", "back", "back", "striker"};
 	public int playerPosition [][]={ {-40,0},{-30,+10},{-30,-10},{-10,0},{-20,-8},{-20,0},{-20,+8},{-20,+16},{-20,+24},{-20,+32},{-10,0}};
 
@@ -24,7 +24,7 @@ public class Robo extends UDPServer{
 	public String myPlayerName[];
 	public double myPlayerValues[][];
 
-	//Offset für den Torschuss, damit möglichst nicht der Pfosten getroffen wird. Abhängig von der Spielseite.
+	//Offset fï¿½r den Torschuss, damit mï¿½glichst nicht der Pfosten getroffen wird. Abhï¿½ngig von der Spielseite.
 	public int kick_offset;
 
 
@@ -34,11 +34,11 @@ public class Robo extends UDPServer{
 	public double y;							//Absolute Y-Position
 	public double lastX = 0.0;					// Vorherige X-Position
 	public double lastY = 0.0;					// Vorherige Y-Position 
-	public double worldAngle=0;					//Weltwinkel, für Objektpositionen wichtig
+	public double worldAngle=0;					//Weltwinkel, fï¿½r Objektpositionen wichtig
 	public int NumberPlayer;					//Spieler-Nummer, wird vom Server vergeben.
 
 	//closest-Flag Variablen
-	public String closestFlagName;				//Name der nächsten Flagge	
+	public String closestFlagName;				//Name der nï¿½chsten Flagge	
 	public double closestFlagDist;				//Abstand des Spielers zur Flagge
 	public double closestFlagAngle;				//Winkel, in dem der Spieler die Flagge sieht
 	public double closestFlagX;					//Abs. X-Koordinate der Flagge
@@ -50,7 +50,7 @@ public class Robo extends UDPServer{
 	public double lineAngle;					//Sichtwinkel zur Linie
 
 	//Ball-Variablen
-	public boolean seeBall;						//Sicht auf den Ball möglich?
+	public boolean seeBall;						//Sicht auf den Ball mï¿½glich?
 	public double ballDist;						//Abstand zum Ball	
 	public double ballAngle;					//Sichtwinkel zum Ball
 	public double ballSpeed;					//Ball-Geschwindigkeit
@@ -59,17 +59,17 @@ public class Robo extends UDPServer{
 
 	//Tor-Informationen
 	public String goalName;						//Flaggenname, die direkt im Tor ist - im Weiteren Tor genannt
-	public boolean seeGoal;						//Sicht auf das Tor möglich?
+	public boolean seeGoal;						//Sicht auf das Tor mï¿½glich?
 	public double goalAngle;					//Sichtwinkel zum Tor
 	public double goalDist;						//Abstand zum Tor
 	//Pfosten-Informationen	
 	public String cornerGoalLeft;				//Flaggenname am linken Pfosten
-	public boolean seeCornerGoalLeft;			//Sicht auf linken Pfosten möglich?
+	public boolean seeCornerGoalLeft;			//Sicht auf linken Pfosten mï¿½glich?
 	public double cornerGoalLeftDist;			//Abstand zum linken Pfosten
 	public double cornerGoalLeftAngle;			//Sichtwinkel auf linken Pfosten
 
 	public String cornerGoalRight;				//Flaggenname am rechten Pfosten
-	public boolean seeCornerGoalRight;			//Sicht auf rechten Pfosten möglich?
+	public boolean seeCornerGoalRight;			//Sicht auf rechten Pfosten mï¿½glich?
 	public double cornerGoalRightDist;			//Abstand zum rechten Pfosten
 	public double cornerGoalRightAngle;			//Sichtwinkel zum rechten Pfosten
 
@@ -77,7 +77,7 @@ public class Robo extends UDPServer{
 	public String [] NameFlags;					//Name der geparsten Objekte
 	public double  [][] ValueFlags;				//Werte dieser Objekte
 
-	//Hör-Informationen
+	//Hï¿½r-Informationen
 	String Message;
 	int playerNumberMessage;
 	boolean getMessage;
@@ -98,7 +98,7 @@ public class Robo extends UDPServer{
 			"(f p r t)","(f p r c)","(f p r b)","(f g r t)","(g r)","(f g r b)",
 			"(f c)"
 	};
-	//Zugehörige Koordinaten der Flaggen
+	//Zugehï¿½rige Koordinaten der Flaggen
 	private double AllFlagPositions[][]={
 			{-50,-57.5}, {-40,-57.5}, {-30,-57.5}, {-20,-57.5}, {-10,-57.5}, {0,-57.5},
 			{10,-57.5},  {20,-57.5},  {30,-57.5},  {40,-57.5},  {50,-57.5},
@@ -116,33 +116,33 @@ public class Robo extends UDPServer{
 	};
 
 
-	// Variablen für den Torwart 
+	// Variablen fï¿½r den Torwart 
 	public	boolean	ballCatched = 		false;	// false = Torwart ist (von Anfang an) nicht im Ballbesitz
 	private	double	catchable_area_l =	2.0;	// Wert aus der server.conf
 	private	double	catchable_area_w =	1.0;	// Wert aus der server.conf
 	private	int		goalie_max_moves =	2;		// Wert aus der server.conf
 	public	int		goalie_used_moves = 0;		// wird inkrementiert, wenn der Torwart "moved", nachdem er den Ball gefangen hat (bis goalie_max_moves)
-	public	double	free_kick_y	=		0.0;		// Der Torwart führt einen Abstoß immer von der Position [ -34.0 | free_kick_y ] aus.
+	public	double	free_kick_y	=		0.0;		// Der Torwart fï¿½hrt einen Abstoï¿½ immer von der Position [ -34.0 | free_kick_y ] aus.
 
 	public	String	penaltyCenter;				// Flaggenname des Mittelpunkts der Strafraumlinie
-	public	boolean	seePenaltyCenter;			// Sicht auf Mittelpunkt der Strafraumlinie möglich?
+	public	boolean	seePenaltyCenter;			// Sicht auf Mittelpunkt der Strafraumlinie mï¿½glich?
 	public	double	penaltyCenterDist;			// Abstand zum Mittelpunkt der Strafraumlinie
 	public	double	penaltyCenterAngle;			// Sichtwinkel zum Mittelpunkt der Strafraumlinie
 
 	public	String	goalCenter;					// Flaggenname des Mittelpunkts der Torlinie
-	public	boolean	seeGoalCenter;				// Sicht auf Mittelpunkt der Torlinie möglich?
+	public	boolean	seeGoalCenter;				// Sicht auf Mittelpunkt der Torlinie mï¿½glich?
 	public	double	goalCenterDist;				// Abstand zum Mittelpunkt der Torlinie
 	public	double	goalCenterAngle;			// Sichtwinkel zum Mittelpunkt der Torraumlinie
 
 	public	int		stepToPenalty =		0;		// gibt an, in welchem Abschnitt sich der Torwart Richtung Elfmeterpunkt befindet
 	public	int		stepToGoal =		0;		// gibt an, in welchem Abschnitt sich der Torwart Richtung Startposition am Tor befindet
 	public	int		stepToBlockBall =	0;		// gibt an, in welchem Abschnitt sich der Torwart befindet, um den Ball zu blockieren
-	public	int		stepToFreeKick =	0;		// gibt an, in welchem Abschnitt sich der Torwart für einen Abstoß befindet
+	public	int		stepToFreeKick =	0;		// gibt an, in welchem Abschnitt sich der Torwart fï¿½r einen Abstoï¿½ befindet
 
 	public	double	lastBallX =			0.0;	// X-Koordinate, wo der Ball zuvor war
 	public	double	lastBallY =			0.0;	// Y-Koordinate, wo der Ball zuvor war
-	public	double	desiredX =			0.0;	// X-Koordinate, wo der Torwart hinläuft, um den Ball zu blockieren
-	public	double	desiredY =			0.0;	// Y-Koordinate, wo der Torwart hinläuft, um den Ball zu blockieren
+	public	double	desiredX =			0.0;	// X-Koordinate, wo der Torwart hinlï¿½uft, um den Ball zu blockieren
+	public	double	desiredY =			0.0;	// Y-Koordinate, wo der Torwart hinlï¿½uft, um den Ball zu blockieren
 	public	double	lastDesiredX =		0.0;	// X-Koordinate, wo der Torwart zuletzt hin lief
 	public	double	lastDesiredY =		0.0;	// Y-Koordinate, wo der Torwart zuletzt hin lief
 	private	double	desiredOffset =		1.0;	// gibt an, wie weit eine neue 'desired'-Koordinate von einer Alten sein darf
@@ -150,7 +150,7 @@ public class Robo extends UDPServer{
 	public	double	targetDist =		0.0;	// gibt den Abstand zu einer Position an
 	public	double	startX =			0.0;	// X-Koordinate der Startposition
 	public	double	startY =			0.0;	// Y-Koordinate der Startposition
-	private boolean	keeper_info =		false;	// 'true' lässt alle TW-Infos auf der Konsole ausgaben
+	private boolean	keeper_info =		false;	// 'true' lï¿½sst alle TW-Infos auf der Konsole ausgaben
 
 
 	public Robo(String ip, int port, String MyName) throws Exception
@@ -159,7 +159,8 @@ public class Robo extends UDPServer{
 		this.myName = MyName;
 	}
 
-	public void init(String name, int version, boolean keeper) throws Exception	// initialisert einen Spieler für das Team 'name' mit Versionsnummer
+	// initialisert einen Spieler fï¿½r das Team 'name' mit Versionsnummer
+	public void init(String name, int version, boolean keeper) throws Exception	
 	{
 		if( keeper ){
 			send("(init " + name +" (version "+version+") (goalie))");
@@ -195,10 +196,10 @@ public class Robo extends UDPServer{
 	public void calculate_player_position(double lineAngle, double lineDistance){
 		/*
 		 * Berechnen der Player-Position und aktualisieren der Koordinaten x und y.
-		 * Da die Variablen lineAngle und lineDistance verändert werden, hier als Übergabeparameter. 
+		 * Da die Variablen lineAngle und lineDistance verï¿½ndert werden, hier als ï¿½bergabeparameter. 
 		 */
 
-		//Überprüfen, auf welche Line geguckt wird, anpassen des Winkels
+		//ï¿½berprï¿½fen, auf welche Line geguckt wird, anpassen des Winkels
 		if(lineName.equals("(l t)")){
 			if(lineAngle<0){
 				lineAngle+=180;
@@ -249,7 +250,7 @@ public class Robo extends UDPServer{
 		 * Berechnen der Position von beliebigen Objekten, die vom Spieler gesehen werden.
 		 * Da die globale Variable worldAngle benutzt wird, muss zuerst die Funktion
 		 * calculate_player_position aufgerufen werden.
-		 * Die Koordinaten werden als Array zurückgegeben.
+		 * Die Koordinaten werden als Array zurï¿½ckgegeben.
 		 */
 		double objectPosition[]={0,0};
 		//Differenz zu worldAngle bilden
@@ -264,7 +265,7 @@ public class Robo extends UDPServer{
 		//Berechnen der Position
 		objectPosition[0]=(x+Math.cos(Math.toRadians(angle))*objectDistance);
 		objectPosition[1]=(y-Math.sin(Math.toRadians(angle))*objectDistance);
-		//Rückgabe
+		//Rï¿½ckgabe
 		return objectPosition;
 	}
 
@@ -275,11 +276,11 @@ public class Robo extends UDPServer{
 		 * Schusswinkel heraus.
 		 * boolean debug steuert die Konsolenausgabe zur Kontrolle
 		 * 
-		 * minAngle: 	minimal gewünschter Schusswinkel
-		 * maxAngle: 	maximal gewünschter Schusswinkel
+		 * minAngle: 	minimal gewï¿½nschter Schusswinkel
+		 * maxAngle: 	maximal gewï¿½nschter Schusswinkel
 		 * minAbstand: 	Grad-Abstand, den der Gegner mindestens entfernt sein soll
-		 * 				Bsp: minAbstand=5,  Gegner -8°, Schusswinkel bis -13 und ab -3
-		 * distance: 	Distanz, die ein Gegner höchstens haben darf, damit er noch hier berücksichtigt wird.
+		 * 				Bsp: minAbstand=5,  Gegner -8ï¿½, Schusswinkel bis -13 und ab -3
+		 * distance: 	Distanz, die ein Gegner hï¿½chstens haben darf, damit er noch hier berï¿½cksichtigt wird.
 		 * 				Also: distance =35, Gegner ist 40 weit weg -> Funktion tut so, als ob er nicht existiert.
 		 * 
 		 */
@@ -291,14 +292,14 @@ public class Robo extends UDPServer{
 			maxAngle=swap;
 		}
 
-		//Bestimmen der Anzahl, wieviele Gegner in der angegebenen Zone (zwischen minAngle und maxAngle, näher als distance) sind.
+		//Bestimmen der Anzahl, wieviele Gegner in der angegebenen Zone (zwischen minAngle und maxAngle, nï¿½her als distance) sind.
 		int zaehl=0;
 		for(int i=0;i<otherPlayerName.length;i++){
 			if((otherPlayerValues[i][1]<maxAngle+10&&otherPlayerValues[i][1]>minAngle-10)&&otherPlayerValues[i][0]<distance){
 				zaehl++;	
 			}
 		}
-		//Erzeugen eines Arrays, in der die Winkel der Gegner gespeichert werden. Größe ist durch zaehl bekannt.
+		//Erzeugen eines Arrays, in der die Winkel der Gegner gespeichert werden. Grï¿½ï¿½e ist durch zaehl bekannt.
 		double angle [] = new double[zaehl];
 		//Speichern der Werte in das Array
 		for(int i=0;i<angle.length;i++){
@@ -309,30 +310,30 @@ public class Robo extends UDPServer{
 
 		//Bestimmen des Schusswinkels
 		boolean help=false;
-		//Anfänglicher Schusswinkel ist immer =0°
+		//Anfï¿½nglicher Schusswinkel ist immer =0ï¿½
 		double kickAngle=0;
-		//Ausgabe von minAngle und maxAngle falls gewünscht.
+		//Ausgabe von minAngle und maxAngle falls gewï¿½nscht.
 		if(debug){System.out.println("minAngle:"+minAngle+"  maxAngle:"+maxAngle);}
 
 		//Durchgehen der Gegner, ob der vorgeschlagene Schusswinkel (kickAngle) mit einem dieser Kollidiert.
 		for(int i=0;i<angle.length;i++){
-			//Ausgabe der Aktuellen angle und kickAngle Werte, falls gewünscht
+			//Ausgabe der Aktuellen angle und kickAngle Werte, falls gewï¿½nscht
 			if(debug){System.out.println("Angle:"+angle[i]+"Kick-Angle: "+kickAngle);}
 
 
 			if(diffTwoDouble(kickAngle,angle[i])<minAbstand){
-				//Schusswinkel (kickAngle) und Winkel des Gegners (angle[i]) sind näher als minAbstand aneinander.
-				//Addieren von minAbstand/2 auf den Schusswinkel. Zurücksetzen der Laufvariablen auf 0 bzw, 
+				//Schusswinkel (kickAngle) und Winkel des Gegners (angle[i]) sind nï¿½her als minAbstand aneinander.
+				//Addieren von minAbstand/2 auf den Schusswinkel. Zurï¿½cksetzen der Laufvariablen auf 0 bzw, 
 				//Da diese am Ende erst inkrementiert wird auf -1. -> Die Schleife beginnt von neuem und kontrolliert 
 				//wieder alle Gegner, ob diese mit dem neuen Schusswinkel kollidieren.
 				kickAngle+=minAbstand/2;
 				i=-1;
-				//Ausgabe, falls gewünscht
+				//Ausgabe, falls gewï¿½nscht
 				if(debug){System.out.println("kickAngle("+kickAngle+") meets Player within minAbstand("+minAbstand+").");}
 			}
 
 			if(kickAngle>maxAngle){
-				//Auf kickAngle wurde nun so oft  minAbstand/2 addiert, dass kickAnlge größer als maxAngle wurde. 
+				//Auf kickAngle wurde nun so oft  minAbstand/2 addiert, dass kickAnlge grï¿½ï¿½er als maxAngle wurde. 
 
 				//Darum wird nun die "andere Seite" getestet. kickAngle wird auf minAngle gesetzt. Damit dies nicht in 
 				//einer Endlosschleife sich wiederholt, wird die Variable help von false auf true gesetzt.
@@ -340,7 +341,7 @@ public class Robo extends UDPServer{
 
 				if(help){
 					//Sollte das Programm schonmal die Variable auf minAngle-1 gesetzt haben, wird hier die schleife unterbrochen.
-					//kickAngle wird auf -180° gesetzt, damit der Spieler den Ball direkt nach hinten spielt.
+					//kickAngle wird auf -180ï¿½ gesetzt, damit der Spieler den Ball direkt nach hinten spielt.
 					kickAngle=-180;
 
 					if(debug){System.out.println("Sequence reaches end of maxAngle("+maxAngle+") second time.\n Exiting with kickAngle("+kickAngle+").");}
@@ -351,34 +352,34 @@ public class Robo extends UDPServer{
 				help=true;
 			}
 		}
-		//Rückgabe des Schusswinkels. 
+		//Rï¿½ckgabe des Schusswinkels. 
 		return kickAngle;	
 	}
 
 	public void tactic_striker () throws Exception{
 		/*
-		 * Diese Funktion enthält die Taktik für einen Stürmer.
-		 * Der Stürmer sucht den Ball, findet ihn, läuft zum Tor und schießt dann auf einen freien
+		 * Diese Funktion enthï¿½lt die Taktik fï¿½r einen Stï¿½rmer.
+		 * Der Stï¿½rmer sucht den Ball, findet ihn, lï¿½uft zum Tor und schieï¿½t dann auf einen freien
 		 * Bereich im Tor.
 		 */
 
 
-		//Zuerst: Sehe ich den Ball? Wenn nicht, dann drehe ich mich um 30°
+		//Zuerst: Sehe ich den Ball? Wenn nicht, dann drehe ich mich um 30ï¿½
 		if(!seeBall){
 			turn(70);
 		}
 
-		//Wenn ich den Ball nun sehe, schaue ich, ob die Entfernung größer als 0.5 ist.
+		//Wenn ich den Ball nun sehe, schaue ich, ob die Entfernung grï¿½ï¿½er als 0.5 ist.
 		else if(ballDist>0.5){
 
-			//Die Entfernung ist größer als 0.5. Somit muss ich zuerst auf den Ball zulaufen.
+			//Die Entfernung ist grï¿½ï¿½er als 0.5. Somit muss ich zuerst auf den Ball zulaufen.
 			//Schaue ich auf den Ball? 
 			if(Math.abs(ballAngle)>4){
-				//Der Winkel, mit dem ich auf den Ball schaue ist größer als |2| grad.
+				//Der Winkel, mit dem ich auf den Ball schaue ist grï¿½ï¿½er als |2| grad.
 				//Also muss ich mich um denselben betrag drehen.
 				turn(ballAngle);
 			}
-			//Wenn nun der Winkel nicht größer als |2| grad ist, kann ich loslaufen.
+			//Wenn nun der Winkel nicht grï¿½ï¿½er als |2| grad ist, kann ich loslaufen.
 			else{
 				dash(100);
 			}
@@ -404,13 +405,13 @@ public class Robo extends UDPServer{
 					}
 				}
 				else{
-					//Das Tor ist näher als 27
+					//Das Tor ist nï¿½her als 27
 					if(goalAngle>2||goalAngle<-2){
 						//Ich gucke nicht direkt aufs Tor. Ich muss mich drehen.
 						turn(goalAngle);
 					}
 					else{
-						//Wenn ich beide Pfosten sehe, kann ich den richtigen Winkel für ein Torschuss berechnen.
+						//Wenn ich beide Pfosten sehe, kann ich den richtigen Winkel fï¿½r ein Torschuss berechnen.
 						if(seeCornerGoalLeft&&seeCornerGoalRight){	
 							double kickAngle= GetKickAngle(cornerGoalLeftAngle+kick_offset, cornerGoalRightAngle-kick_offset,9,100,false);
 							//System.out.println("KickAngle Tor:"+kickAngle);
@@ -450,7 +451,7 @@ public class Robo extends UDPServer{
 				}
 			}
 			else{
-				//Es wird weder das Tor, noch ein Pfosten gesehen. Drehen um 45°.
+				//Es wird weder das Tor, noch ein Pfosten gesehen. Drehen um 45ï¿½.
 				turn(70);
 			}
 
@@ -461,7 +462,7 @@ public class Robo extends UDPServer{
 
 	public void resetSteps(int except) throws Exception{
 		/*
-		 * Setzt alle Schritt-Variablen bis auf eine gewählte Ausnahme zurück.
+		 * Setzt alle Schritt-Variablen bis auf eine gewï¿½hlte Ausnahme zurï¿½ck.
 		 */
 		if( except != 1 ) stepToPenalty = 0;
 		if( except != 2 ) stepToGoal = 0;
@@ -471,7 +472,7 @@ public class Robo extends UDPServer{
 	
 	public boolean runToStaticPosition(double distTarget, boolean precision) throws Exception{
 		/*
-		 * Diese Funkion lässt einen Spieler zu einer statischen Position laufen.
+		 * Diese Funkion lï¿½sst einen Spieler zu einer statischen Position laufen.
 		 * Der Parameter 'precision' gibt an, ob diese Position (relativ) genau oder
 		 * so schnell es geht erreicht werden soll.
 		 */
@@ -494,18 +495,18 @@ public class Robo extends UDPServer{
 			}
 		}
 		
-		if(keeper_info)System.out.println("TW: läuft");
+		if(keeper_info)System.out.println("TW: lï¿½uft");
 		
 		return true;
 	}
 
 	public void runToBall(int power, double distance) throws Exception{
 		if(!seeBall){						// Wenn der Ball nicht gesehen wird...
-			turn(30);						// ...soll sich der Spieler um 30° Grad drehen
+			turn(30);						// ...soll sich der Spieler um 30ï¿½ Grad drehen
 		}else if(ballDist > distance){ 		// Wenn der Ball gesehen wird und noch weiter als 'distance' entfernt ist... 
-			if(Math.abs(ballAngle) > 2){	//    ...muss überprüft werden, ob der Spieler noch genau genug auf den Ball zuläuft...
+			if(Math.abs(ballAngle) > 2){	//    ...muss ï¿½berprï¿½ft werden, ob der Spieler noch genau genug auf den Ball zulï¿½uft...
 				turn(ballAngle);			//    ...wenn nicht, muss der Spieler sich zum Ball drehen.
-			}else{							//    Wenn der Spieler genau genug auf den Ball zuläuft...
+			}else{							//    Wenn der Spieler genau genug auf den Ball zulï¿½uft...
 				dash( power );				//    ... soll er mit vorgegebener 'power' auf den Ball zulaufen
 			}
 		}
@@ -513,7 +514,7 @@ public class Robo extends UDPServer{
 
 	public double getAngle(double lookingX, double lookingY, double targetX, double targetY) throws Exception{
 		/*
-		 * Diese Funktion errechnet Drehwinkel und -richtung für die Funktion 'turn'.
+		 * Diese Funktion errechnet Drehwinkel und -richtung fï¿½r die Funktion 'turn'.
 		 * Drehpunkt ist dabei immer der Spieler selbst (x, y).
 		 * Dazu werden folgende Variablen benutzt:
 		 *          x:	X-Koordinate des Spielers
@@ -522,7 +523,7 @@ public class Robo extends UDPServer{
 		 *   lookingY:	Y-Koordinate des Objekts, auf das der Spieler momentan schaut
 		 *    targetX:	X-Koordinate des Objekts, auf das der Spieler schauen soll
 		 * 	  targetY:	Y-Koordinate des Objekts, auf das der Spieler schauen soll
-		 * turn_angle:	Drehwinkel und -richtung, um auf das gewünschte 'target'-Objekt zu schauen	 
+		 * turn_angle:	Drehwinkel und -richtung, um auf das gewï¿½nschte 'target'-Objekt zu schauen	 
 		 */
 		double myDistLookingX =	x - lookingX;	// X-Abstand zwischen dem Spieler und dem Objekt, was er gerade anschaut
 		double myDistLookingY =	y - lookingY;	// Y-Abstand zwischen dem Spieler und dem Objekt, was er gerade anschaut
@@ -561,7 +562,7 @@ public class Robo extends UDPServer{
 	}
 	
 	public void keeper_catchBall() throws Exception{
-		resetSteps(100);	// Alle Schritt-Variable (ohne Ausnahme!) zurücksetzen
+		resetSteps(100);	// Alle Schritt-Variable (ohne Ausnahme!) zurï¿½cksetzen
 		if( Math.abs(x) > 37 && Math.abs(y) < 19){ // Nur wenn der TW sich im Strafraum befindet, darf er den Ball fangen!
 			catch_ball(ballAngle);
 			if(keeper_info)System.out.println("TW: versuche den Ball zu fangen");
@@ -570,10 +571,10 @@ public class Robo extends UDPServer{
 
 	public void keeper_runToPenaltyPoint() throws Exception{
 		/*
-		 * Diese Funktion tritt in Kraft, wenn der Ball in der gegnerischen Hälfte ist.
-		 * Sie lässt den Torwart in Schritten
+		 * Diese Funktion tritt in Kraft, wenn der Ball in der gegnerischen Hï¿½lfte ist.
+		 * Sie lï¿½sst den Torwart in Schritten
 		 */
-		resetSteps(1);								// zurücksetzen der Schritt-Variablen
+		resetSteps(1);								// zurï¿½cksetzen der Schritt-Variablen
 		int penaltyX = -41, penaltyCenterX = -36;	// X-Werte der verwendeten Flags
 
 		switch (stepToPenalty)
@@ -608,7 +609,7 @@ public class Robo extends UDPServer{
 			double startDist = getDistance(x, y, startX, startY);
 			if(keeper_info)System.out.println(myName + ": G2P: targetDist: " + targetDist + " / startDist: " + startDist);
 			
-			// Wenn der Torwart noch nicht den gewünschten Abstand gelaufen ist
+			// Wenn der Torwart noch nicht den gewï¿½nschten Abstand gelaufen ist
 			if( startDist <= targetDist){
 				if(keeper_info)System.out.println(myName + ": G2P: laufe los   Abstand zum Ziel: " + (targetDist-startDist));
 				if( Math.abs(x) > 35 && Math.abs(y) < 19){
@@ -634,10 +635,10 @@ public class Robo extends UDPServer{
 
 	public void keeper_runToStartPosition() throws Exception{
 		/*
-		 * Diese Funktion tritt in Kraft, wenn der Ball in der gegnerischen Hälfte ist.
-		 * Sie lässt den Torwart in Schritten
+		 * Diese Funktion tritt in Kraft, wenn der Ball in der gegnerischen Hï¿½lfte ist.
+		 * Sie lï¿½sst den Torwart in Schritten
 		 */
-		resetSteps(2);				// zurücksetzen der Schritt-Variablen
+		resetSteps(2);				// zurï¿½cksetzen der Schritt-Variablen
 		double goalCenterX = -52.5;	// X-Wert des verwendeten Flags
 
 		switch (stepToGoal)
@@ -670,7 +671,7 @@ public class Robo extends UDPServer{
 		case 3:
 			double startDist = getDistance(x, y, startX, startY);
 			
-			// Wenn der Torwart noch nicht den gewünschten Abstand gelaufen ist
+			// Wenn der Torwart noch nicht den gewï¿½nschten Abstand gelaufen ist
 			if( startDist <= targetDist){
 				runToStaticPosition( (targetDist-startDist), true);
 			}else{
@@ -693,7 +694,7 @@ public class Robo extends UDPServer{
 	
 
 	public void keeper_blockBall() throws Exception{
-		resetSteps(3);		// zurücksetzen der Schritt-Variablen
+		resetSteps(3);		// zurï¿½cksetzen der Schritt-Variablen
 
 		desiredX = playerPosition[0][0];
 		if( (ballX - lastBallX) == 0){
@@ -713,23 +714,23 @@ public class Robo extends UDPServer{
 		if(keeper_info)System.out.println("TW: BLOCK: START");
 		if(keeper_info)System.out.println("  desiredX: " + desiredX + " / desiredY: " + desiredY);
 		
-		// Hat sich das Ziel "deutlich" geändert...
+		// Hat sich das Ziel "deutlich" geï¿½ndert...
 		if( Math.abs(desiredX - lastDesiredX) > desiredOffset ||
 				Math.abs(desiredY - lastDesiredY) > desiredOffset )
 		{	// ...muss das Ziel aktualisiert werden
 			lastDesiredX = desiredX;
 			lastDesiredY = desiredY;
 			stepToBlockBall = 0;
-			if(keeper_info)System.out.println(" ZIEL HAT SICH VERÄNDERT");
+			if(keeper_info)System.out.println(" ZIEL HAT SICH VERï¿½NDERT");
 		}
 		
 		if(keeper_info)System.out.println(" HIER BIN ICH: OFFSET: X:" + Math.abs(desiredX - lastDesiredX) + " / Y: " + Math.abs(desiredY - lastDesiredY));
 		
-		// Hat sich das Ziel allerdings nur wenig bis gar nicht geändert..
+		// Hat sich das Ziel allerdings nur wenig bis gar nicht geï¿½ndert..
 		if( Math.abs(desiredX - lastDesiredX) <= desiredOffset &&
 				Math.abs(desiredY - lastDesiredY) <= desiredOffset )
 		{
-			if(keeper_info)System.out.println("  Ziel hat sich nur wenig geändert! STEP: " + stepToBlockBall);
+			if(keeper_info)System.out.println("  Ziel hat sich nur wenig geï¿½ndert! STEP: " + stepToBlockBall);
 			
 		 	// ... soll der Torwart auf die 'lastDesired'-Koordinaten zulaufen und von dauert
 			switch (stepToBlockBall)
@@ -745,7 +746,7 @@ public class Robo extends UDPServer{
 				}				
 				break;
 				
-			case 1:	// Torwart soll sich von Sicht Richtung Ball zu den gewünschten Koordinaten drehen
+			case 1:	// Torwart soll sich von Sicht Richtung Ball zu den gewï¿½nschten Koordinaten drehen
 				double direction = getAngle(lastBallX, lastBallY, lastDesiredX, lastDesiredY);	// 'lastBall', weil schon ein weiterer Schritt vergangen ist!
 				turn( direction );
 				if(keeper_info)System.out.println("  TW hat sich zum Zielpunkt gedreht! DIR: " + direction);
@@ -759,10 +760,10 @@ public class Robo extends UDPServer{
 				stepToBlockBall = 3;
 				break;
 				
-			case 3:	// Torwart soll zu den gewünschten Koordinaten laufen bis er da ist
+			case 3:	// Torwart soll zu den gewï¿½nschten Koordinaten laufen bis er da ist
 				double startDist = getDistance(x, y, startX, startY);
 				
-				// Wenn der Torwart noch nicht den gewünschten Abstand gelaufen ist
+				// Wenn der Torwart noch nicht den gewï¿½nschten Abstand gelaufen ist
 				if( startDist < targetDist){
 					runToStaticPosition( (targetDist-startDist), false);
 				}else{
@@ -770,7 +771,7 @@ public class Robo extends UDPServer{
 				}
 				break;
 				
-			case 4:	// Torwart soll nun von den gewünschten Koordinaten aus (wo er gerade steht) zum Ball schauen
+			case 4:	// Torwart soll nun von den gewï¿½nschten Koordinaten aus (wo er gerade steht) zum Ball schauen
 				if( !seeBall ){
 					turn(30);
 					if(keeper_info)System.out.println("  TW sieht den Ball nicht");
@@ -780,7 +781,7 @@ public class Robo extends UDPServer{
 					stepToBlockBall = 1;
 				}
 				// ZUSATZ:	wenn zB eine inkrementiere Laufvariable einen bestimmten Werte erreicht hat,
-				//				kann der Torwart (der noch auf den nicht geänderten gewünschten Koordinaten steht)
+				//				kann der Torwart (der noch auf den nicht geï¿½nderten gewï¿½nschten Koordinaten steht)
 				//				auf den Ball zulaufen
 				break;
 			}
@@ -791,23 +792,23 @@ public class Robo extends UDPServer{
 		/*
 		 * Durch diese Funktion versucht der Torwart sich genau zwischen Ball und Tor zu positionieren.
 		 * Es ist bekannt, wo der Ball zuvor war und wo der Ball jetzt gerade ist.
-		 * Daraus lässt sich ein Punkt vor dem Tor bestimmen, durch den der Ball ins Tor rollen würde.
+		 * Daraus lï¿½sst sich ein Punkt vor dem Tor bestimmen, durch den der Ball ins Tor rollen wï¿½rde.
 		 * Der Torwart versucht nun, sich auf diesen Punkt zwischen Ball und der Torlinie zu stellen, damit
-		 * (falls der Ball tatsächlich zu ihm rollt) er den Ball fangen kann, wenn dieser nah genug ist.
+		 * (falls der Ball tatsï¿½chlich zu ihm rollt) er den Ball fangen kann, wenn dieser nah genug ist.
 		 * 
 		 * Noch nicht umgesetzter Zusatz:
 		 * Der Torwart soll auf den Ball zulaufen, wenn entweder sich der Ball nicht mehr bewegt
-		 * (ballSpeed < 2) oder der Ball schon "länger" seine Laufbahn nicht verändert hat. 
+		 * (ballSpeed < 2) oder der Ball schon "lï¿½nger" seine Laufbahn nicht verï¿½ndert hat. 
 		 */
-		resetSteps(3);							// zurücksetzen der Schritt-Variablen
+		resetSteps(3);							// zurï¿½cksetzen der Schritt-Variablen
 
-		// Punkt finden, durch den der Ball am Torwart vorbeirollen würde, falls der Ball Richtung Tor genauso weiterrollt wie bisher
+		// Punkt finden, durch den der Ball am Torwart vorbeirollen wï¿½rde, falls der Ball Richtung Tor genauso weiterrollt wie bisher
 		double desired_Y = lastBallY + (ballY - lastBallY) / (ballX - lastBallX) * (desired_X - lastBallX);
 
 		if(keeper_info)System.out.println(" DESIRED: Y = " + desired_Y);
 		if(keeper_info)System.out.println(" DESIRED: X = " + desired_X);
 
-		// Falls der Ball am Tor vorbei rollen würde, soll der Torwart nicht zu weit vom Tor weg laufen
+		// Falls der Ball am Tor vorbei rollen wï¿½rde, soll der Torwart nicht zu weit vom Tor weg laufen
 		if( desired_Y < -8){
 			desired_Y = -8;
 		}else if( desired_Y > 8){
@@ -835,30 +836,30 @@ public class Robo extends UDPServer{
 				}
 				break;
 
-			case 1:		// Der Torwart steht nun in Richtung des Ball und muss sich noch in Richtung der gewünschten Koordinaten drehen
+			case 1:		// Der Torwart steht nun in Richtung des Ball und muss sich noch in Richtung der gewï¿½nschten Koordinaten drehen
 				double direction = Math.atan( diffTwoDouble(x,lastBallX) / diffTwoDouble(y,lastBallY) );
 				turn( direction );
 				stepToBlockBall = 2;
 				if(keeper_info)System.out.println("TW: BLOCK: schaut zu den 'desired'-Koordinaten  DIRECTION: " + direction);
 				break;
 
-			case 2:		// Der Torwart steht nun in Richtung der gewünschten Koordinaten und muss nun solange laufen, bis er da ist
-				//mögliches Problem: wenn der Torwart die eine Koordinate schon erreicht hat, die andere aber nicht, läuft er zu weit!
+			case 2:		// Der Torwart steht nun in Richtung der gewï¿½nschten Koordinaten und muss nun solange laufen, bis er da ist
+				//mï¿½gliches Problem: wenn der Torwart die eine Koordinate schon erreicht hat, die andere aber nicht, lï¿½uft er zu weit!
 				if( diffTwoDouble(x, desired_X) > 0.5 && diffTwoDouble(y, desired_Y) > 0.5 ){
 					dash(50);
-					if(keeper_info)System.out.println("TW: BLOCK: läuft zu DESIRED");
+					if(keeper_info)System.out.println("TW: BLOCK: lï¿½uft zu DESIRED");
 				}else{
 					stepToBlockBall = 3;
 					if(keeper_info)System.out.println("TW: BLOCK: bei DESIRED angekommen");
 				}
 				break;
 
-			case 3:		// Der Torwart steht nun auf den gewünschten und schaut in Richtung Ball
+			case 3:		// Der Torwart steht nun auf den gewï¿½nschten und schaut in Richtung Ball
 				if( !seeBall ){
 					turn(30);
 					if(keeper_info)System.out.println("TW: BLOCK: sieht den Ball nicht und dreht sich");
 				}else{
-					// Wenn der Ball noch rollt, aber ungefähr dahin, wo er bisher hingerollt ist...
+					// Wenn der Ball noch rollt, aber ungefï¿½hr dahin, wo er bisher hingerollt ist...
 					if( (ballSpeed > 1) && (Math.abs(desired_Y) < Math.abs(lastDesiredY)+catchable_area_w) ){	
 						runToBall(100, catchable_area_l/2);	// ...soll der Torwart auf den Ball zulaufen						
 					}else{
@@ -876,7 +877,7 @@ public class Robo extends UDPServer{
 
 
 	public void keeper_free_kick() throws Exception{
-		resetSteps(4);		// zurücksetzen der Schritt-Variablen
+		resetSteps(4);		// zurï¿½cksetzen der Schritt-Variablen
 		
 		if(keeper_info)System.out.println("TW: BALL CATCHED step:" + stepToFreeKick);
 		
@@ -909,10 +910,10 @@ public class Robo extends UDPServer{
 
 	public void tactic_keeper () throws Exception{
 		/*
-		 * Diese Funktion enthält die Taktik für den Torwart.
-		 * Der Torwart überprüft, ob er den Ball hat.
-		 * Wenn er den Ball nicht hat, sucht er ihn und versucht ihn zu fangen. Dazu muss der Torwart den Ball gut einschätzen.
-		 * Wenn er den Ball hat, schießt er den Ball in einem bestimmten Winkel weg, oder "moved" sich zuvor noch mit dem Ball an eine bessere Position.
+		 * Diese Funktion enthï¿½lt die Taktik fï¿½r den Torwart.
+		 * Der Torwart ï¿½berprï¿½ft, ob er den Ball hat.
+		 * Wenn er den Ball nicht hat, sucht er ihn und versucht ihn zu fangen. Dazu muss der Torwart den Ball gut einschï¿½tzen.
+		 * Wenn er den Ball hat, schieï¿½t er den Ball in einem bestimmten Winkel weg, oder "moved" sich zuvor noch mit dem Ball an eine bessere Position.
 		 */
 		
 		if(Side.equals("right")){
@@ -931,11 +932,11 @@ public class Robo extends UDPServer{
 			if( seeBall && (ballDist < catchable_area_l * 0.8) && (Math.abs(x) > 35) && (Math.abs(y) < 19) ){
 				keeper_catchBall();					// ...versucht der Torwart den Ball zu fangen --> bei Erfolg: ballCatched = true (--> parse_hear)
 			}
-			else if(ballX > 0){						// Wenn der Ball sich in der gegnerischen Hälfte (rechts) befindet
+			else if(ballX > 0){						// Wenn der Ball sich in der gegnerischen Hï¿½lfte (rechts) befindet
 				keeper_runToPenaltyPoint();
 			}
-			else{									// Wenn der Ball in der eigenen Hälfte ist
-				if(ballX > -20){					// Wenn der Ball in den ersten 20 Metern der eigenen Hälfte ist
+			else{									// Wenn der Ball in der eigenen Hï¿½lfte ist
+				if(ballX > -20){					// Wenn der Ball in den ersten 20 Metern der eigenen Hï¿½lfte ist
 					keeper_runToStartPosition();
 				}else if(ballX <= -20){				// Wenn sich der Ball in den letzten 30 Metern vor dem eigenen Tor befindet
 
@@ -952,7 +953,7 @@ public class Robo extends UDPServer{
 
 		// Dieses IF muss alleine stehen, damit falls oben der Ball gefangen wurde reagiert werden kann!
 		if( ballCatched ){						// Wenn der Ball gefangen wurde...
-			keeper_free_kick();					// ...führt der Torwart einen Abstoß aus --> danach: ballCatched = false
+			keeper_free_kick();					// ...fï¿½hrt der Torwart einen Abstoï¿½ aus --> danach: ballCatched = false
 		}
 	}
 
@@ -1010,7 +1011,7 @@ public class Robo extends UDPServer{
 
 	public void parse_init(String msg){
 		/*
-		 * Diese Funktion fängt die Initial-Nachricht vom Server ab. Hier gibt der Server die Seite,
+		 * Diese Funktion fï¿½ngt die Initial-Nachricht vom Server ab. Hier gibt der Server die Seite,
 		 * auf der gespielt wird bekannt sowieso den Spielmodus.
 		 */
 		//Ausschneiden und splitten der Nachricht.
@@ -1062,7 +1063,7 @@ public class Robo extends UDPServer{
 		 * auf Nachrichten vom Referee.
 		 */
 
-		//Auf Nachrichten vom Referee hören
+		//Auf Nachrichten vom Referee hï¿½ren
 		if(msg.contains("our")&&!getMessage){
 			String ref=cutOut(msg,"our ",")" );
 			//Message
@@ -1116,7 +1117,7 @@ public class Robo extends UDPServer{
 				if( (ref.contains("l") && Side.equals("left")) || (ref.contains("r") && Side.equals("right")) ){
 					ballCatched = true;
 				}
-				play=true;	// damit die tactic_keeper und damit der keeper_free_kick ausgeführt wird
+				play=true;	// damit die tactic_keeper und damit der keeper_free_kick ausgefï¿½hrt wird
 			}else{
 				ballCatched = false;
 			}
@@ -1130,18 +1131,18 @@ public class Robo extends UDPServer{
 	public void parse_see(String msg){
 		/*
 		 * Mit dieser Funktion kann der See-String geparst werden. Die Funktion 
-		 * ermittelt aus den Objekten automatisch die nächste Flagge (closestFlag), 
+		 * ermittelt aus den Objekten automatisch die nï¿½chste Flagge (closestFlag), 
 		 * die angegebene Line und den Ball. 
-		 * Außerdem setzt sie die Variablen entsprechend.
+		 * Auï¿½erdem setzt sie die Variablen entsprechend.
 		 */
 
 		//Ausschneiden der Flags aus dem See-String
 		if(msg.contains("((")&&msg.endsWith("))")){		
 			//Bei vielen Spielern kann es vorkommen, dass der String abgeschnitten wird. Dann funktioniert
-			//cutOut nicht. Deswegen wird nur geparst, wenn der String vollständig ist.
+			//cutOut nicht. Deswegen wird nur geparst, wenn der String vollstï¿½ndig ist.
 
 			String See=cutOut(msg,"((","))")+"))";
-			//Splitten des See-Strings so, dass jedes Objekt eine einzelne Array-Stelle erhält
+			//Splitten des See-Strings so, dass jedes Objekt eine einzelne Array-Stelle erhï¿½lt
 			String Flags[]=	See.split("\\(\\(");
 
 			//Speichern der Objekte in zwei Arrays (Name und Werte). Es kommen max. 6 Werte vor.
@@ -1160,7 +1161,7 @@ public class Robo extends UDPServer{
 				//Parsen der einzelnen Zahlenstrings in Double.
 				for(int j=0; j < ValueArray.length; j++){
 					if(!ValueArray[j].contains("k")){
-						//Es kann vorkommen, ein Spieler am Ende ein k enthält, dieses k darf nicht geparst werden.
+						//Es kann vorkommen, ein Spieler am Ende ein k enthï¿½lt, dieses k darf nicht geparst werden.
 						ValueFlags[i][j]=Double.parseDouble(ValueArray[j]);
 					}
 				}
@@ -1170,14 +1171,14 @@ public class Robo extends UDPServer{
 			//Es kann nun die "closestFlag" bestimmt werden.
 
 			//Variablen zum Zwischenspeichern von Entfernung und Flaggennummer
-			//und Variable zur Kontrolle, ob überhaupt eine Flagge gesehen wurde.
+			//und Variable zur Kontrolle, ob ï¿½berhaupt eine Flagge gesehen wurde.
 			double length=200; 
 			int flagge=0;
 			boolean flag_exist=false;
 
 			for(int i=0; i < NameFlags.length; i++){
 				if(NameFlags[i].contains("(f")){
-					//Nur Flagge, die ein kleines f am Anfang haben berücksichtigen.
+					//Nur Flagge, die ein kleines f am Anfang haben berï¿½cksichtigen.
 					flag_exist = true;
 					if(length > ValueFlags[i][0]){
 						//neue closestFlag gefunden
@@ -1239,7 +1240,7 @@ public class Robo extends UDPServer{
 				}
 			}
 
-			//Jetzt kann durch die bekannte Anzahl die passende Array-Größe erzeugt werden
+			//Jetzt kann durch die bekannte Anzahl die passende Array-Grï¿½ï¿½e erzeugt werden
 			otherPlayerName= new String[AnzahlGegner];
 			otherPlayerValues= new double[AnzahlGegner][6];
 			myPlayerName= new String[AnzahlSpieler];
@@ -1250,10 +1251,10 @@ public class Robo extends UDPServer{
 			int array_index_1=0;
 			int array_index_2=0;
 			for(int i=0;i<NameFlags.length;i++){
-				//Das Array durchgehen, und nach Playern suchen. Es zählen nur Player, die mit Namen erkannt werden können.
+				//Das Array durchgehen, und nach Playern suchen. Es zï¿½hlen nur Player, die mit Namen erkannt werden kï¿½nnen.
 				if((NameFlags[i].contains("(p")||NameFlags[i].contains("(P"))&&(!NameFlags[i].contains("(p)")||!NameFlags[i].contains("(p)"))){
 					if(!NameFlags[i].contains(myName)){
-						//Wenn der Name nicht meinen Teamnamen enthält, muss es der Gegner sein.
+						//Wenn der Name nicht meinen Teamnamen enthï¿½lt, muss es der Gegner sein.
 						//Speichern des Namen
 						otherPlayerName[array_index_1]=NameFlags[i];
 						//Speichern der Werte
@@ -1273,7 +1274,7 @@ public class Robo extends UDPServer{
 
 			//Filtern des Balls und des Tors aus den See-Objekten.
 
-			//Boolean Variablen, um Abfragen zu können, ob das Objekt wirklich gesehen wird.
+			//Boolean Variablen, um Abfragen zu kï¿½nnen, ob das Objekt wirklich gesehen wird.
 			//Wird das Objekt nicht gesehen, sind die Distanzen und Winkel alt. 
 			seeBall				= false;
 			seeGoal				= false;
